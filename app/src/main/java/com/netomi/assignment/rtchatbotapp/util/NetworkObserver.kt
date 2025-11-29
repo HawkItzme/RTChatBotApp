@@ -30,7 +30,7 @@ class NetworkObserver(private val context: Context) {
         try {
             cm.registerDefaultNetworkCallback(callback)
         } catch (e: Exception) {
-            // Some devices might throw; best-effort
+            // TODO
         }
     }
 
@@ -38,7 +38,7 @@ class NetworkObserver(private val context: Context) {
         try {
             cm.unregisterNetworkCallback(callback)
         } catch (e: Exception) {
-            // ignore
+            // TODO
         }
     }
 }

@@ -1,11 +1,14 @@
 package com.netomi.assignment.rtchatbotapp.data.repository
 
+import com.netomi.assignment.rtchatbotapp.data.model.ChatThreadEntity
 import com.netomi.assignment.rtchatbotapp.data.model.QueuedMessageEntity
+import com.netomi.assignment.rtchatbotapp.data.source.local.ChatThreadDao
 import com.netomi.assignment.rtchatbotapp.data.source.local.QueuedMessageDao
 import com.netomi.assignment.rtchatbotapp.data.source.remote.SocketClient
 import com.netomi.assignment.rtchatbotapp.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -16,16 +19,29 @@ import javax.inject.Singleton
 class ChatRepository @Inject constructor(
     private val socketClient: SocketClient,
     private val queuedMessageDao: QueuedMessageDao,
+    private val chatThreadDao: ChatThreadDao,
     @IoDispatcher private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    // incoming messages from socket as raw text
     val incomingFlow: SharedFlow<String> = socketClient.incoming
 
     val connectionState = socketClient.connectionState
 
+    fun observeThreads(): Flow<List<ChatThreadEntity>> = chatThreadDao.observeAllThreads()
+
+    suspend fun upsertThread(thread: ChatThreadEntity) = withContext(dispatcher) {
+        chatThreadDao.upsert(thread)
+    }
+
+    suspend fun markThreadRead(threadId: String) = withContext(dispatcher) {
+        chatThreadDao.markRead(threadId)
+    }
+
+    suspend fun getThread(threadId: String) = withContext(dispatcher) {
+        chatThreadDao.getThread(threadId)
+    }
+
     suspend fun sendMessageRaw(id: String, text: String): Boolean = withContext(dispatcher) {
-      //  socketClient.send(text)
         val payload = try {
             JSONObject().apply {
                 put("id", id)

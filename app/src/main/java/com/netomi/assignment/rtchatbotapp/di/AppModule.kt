@@ -3,6 +3,7 @@ package com.netomi.assignment.rtchatbotapp.di
 import android.content.Context
 import androidx.room.Room
 import com.netomi.assignment.rtchatbotapp.data.source.local.AppDatabase
+import com.netomi.assignment.rtchatbotapp.data.source.local.ChatThreadDao
 import com.netomi.assignment.rtchatbotapp.data.source.local.QueuedMessageDao
 import com.netomi.assignment.rtchatbotapp.data.source.remote.SocketClient
 import com.netomi.assignment.rtchatbotapp.util.NetworkObserver
@@ -33,7 +34,6 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSocketClient(@ApplicationContext context: Context, okHttpClient: OkHttpClient): SocketClient {
-        // You can persist/configure the WS URL. For assignment provide constant or fetch from prefs.
         val url = DEFAULT_WS_URL
         return SocketClient(url = url, okHttpClient = okHttpClient)
     }
@@ -45,6 +45,9 @@ object AppModule {
 
     @Provides
     fun provideQueuedDao(db: AppDatabase): QueuedMessageDao = db.queuedMessageDao()
+
+    @Provides
+    fun provideChatThreadDao(db: AppDatabase): ChatThreadDao = db.chatThreadDao()
 
     @Provides
     @Singleton

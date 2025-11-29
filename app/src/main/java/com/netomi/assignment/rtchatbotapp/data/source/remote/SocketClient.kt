@@ -3,7 +3,6 @@ package com.netomi.assignment.rtchatbotapp.data.source.remote
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelChildren
@@ -52,6 +51,7 @@ class SocketClient (
         //WebSocket Client
         @Volatile private var ws: WebSocket? = null
         private val client = okHttpClient
+
         //Reconnection/Backoff state
         private val reconnectMutex = Mutex()
         private var reconnectAttempts = 0
