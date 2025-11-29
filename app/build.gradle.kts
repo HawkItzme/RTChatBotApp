@@ -11,17 +11,20 @@ plugins {
 }
 
 android {
-    namespace = "com.netomi.assignment.rtchatbotapp"
+    namespace = "com.rtchatbotapp"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.netomi.assignment.rtchatbotapp"
+        applicationId = "com.rtchatbotapp"
         minSdk = 29
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "WS_URL", "\"wss://example.websocket.com/your_channel\"")
+        buildConfigField("String", "WS_API_KEY", "\"your_api_key_here\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -48,6 +51,7 @@ android {
         }
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
